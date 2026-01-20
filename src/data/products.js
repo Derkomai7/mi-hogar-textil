@@ -1,8 +1,7 @@
-export const categories = [
-    { id: 'cama', name: 'Cama', label_es: 'Cama', label_en: 'Bedding', image: 'https://images.unsplash.com/photo-1505693416388-b0346efee74f?q=80&w=1000&auto=format&fit=crop' },
-    { id: 'bano', name: 'Baño', label_es: 'Baño', label_en: 'Bath', image: 'https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?q=80&w=1000&auto=format&fit=crop' },
-    { id: 'salon', name: 'Salón', label_es: 'Salón', label_en: 'Living', image: 'https://images.unsplash.com/photo-1493666438817-866a91353ca9?q=80&w=1000&auto=format&fit=crop' },
-    { id: 'ropa', name: 'Ropa', label_es: 'Ropa de Casa', label_en: 'Loungewear', image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1000&auto=format&fit=crop' },
+{ id: 'cama', name: 'Cama', label_es: 'Cama', label_en: 'Bedding', image: 'https://images.unsplash.com/photo-1505693416388-b0346efee74f?q=80&w=1000&auto=format&fit=crop' },
+{ id: 'bano', name: 'Baño', label_es: 'Baño', label_en: 'Bath', image: 'https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?q=80&w=1000&auto=format&fit=crop' },
+{ id: 'salon', name: 'Salón', label_es: 'Salón', label_en: 'Living', image: 'https://images.unsplash.com/photo-1616486338812-3dadae4b4f9d?q=80&w=1000&auto=format&fit=crop' },
+{ id: 'ropa', name: 'Ropa', label_es: 'Ropa de Casa', label_en: 'Loungewear', image: 'https://images.unsplash.com/photo-1512918580421-32c29925bd8f?q=80&w=1000&auto=format&fit=crop' },
 ];
 
 export const products = [
