@@ -1,121 +1,179 @@
-import { useParams } from 'react-router-dom';
-import { useState } from 'react';
-import { products } from '../data/products';
-import { useCart } from '../contexts/CartContext';
+import { useState, useEffect } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import { ShoppingBag, Star, Truck, ShieldCheck } from 'lucide-react';
+import { products, categories } from '../data/products';
 import { Button } from '../components/ui/Button';
-import { ProductCard } from '../components/product/ProductCard';
-import clsx from 'clsx';
+import { useCart } from '../contexts/CartContext';
+import { useLanguage } from '../contexts/LanguageContext';
+import { clsx } from 'clsx';
 
 export const ProductDetails = () => {
     const { id } = useParams();
-    const product = products.find(p => p.id === parseInt(id));
-    const { addToCart } = useCart();
+    const [product, setProduct] = useState(null);
+    const [size, setSize] = useState("");
+    const [color, setColor] = useState("");
+    const { addItem, setCartOpen } = useCart();
+    const { t, language } = useLanguage();
 
-    const [selectedSize, setSelectedSize] = useState(product?.sizes ? product.sizes[0] : '');
-    const [selectedColor, setSelectedColor] = useState(product?.colors ? product.colors[0] : '');
+    useEffect(() => {
+        // Helper to find product by id (convert string id from url to number)
+        const found = products.find(p => p.id === parseInt(id));
+        if (found) {
+            setProduct(found);
+            setSize(found.sizes[0]);
+            setColor(found.colors[0]);
+        }
+    }, [id]);
 
     if (!product) {
-        return <div className="text-center py-20">Producto no encontrado</div>;
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <p>Producto no encontrado</p>
+            </div>
+        );
     }
 
-    const relatedProducts = products.filter(p => p.category === product.category && p.id !== product.id).slice(0, 3);
+    const handleAddToCart = () => {
+        addItem({
+            ...product,
+            selectedSize: size,
+            selectedColor: color,
+            name: product[`name_${language}`] // Localized name
+        });
+        setCartOpen(true);
+    };
+
+    // Get related products (same category, excluding current)
+    const relatedProducts = products
+        .filter(p => p.category === product.category && p.id !== product.id)
+        .slice(0, 4);
 
     return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16">
-                {/* Images */}
-                <div className="space-y-4">
-                    <div className="aspect-[3/4] overflow-hidden rounded-lg bg-gray-100">
-                        <img src={product.image} alt={product.name} className="h-full w-full object-cover" />
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                        {/* Pseudo gallery */}
-                        <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden">
-                            <img src={product.image} alt="detail 1" className="h-full w-full object-cover" />
-                        </div>
-                        <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden">
-                            <img src={product.image} alt="detail 2" className="h-full w-full object-cover" />
+        <div className="pt-24 pb-16 animate-fade-in">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+
+                    {/* Images */}
+                    <div className="space-y-4">
+                        <div className="aspect-[4/5] bg-gray-100 rounded-lg overflow-hidden">
+                            <img
+                                src={product.image}
+                                alt={product[`name_${language}`]}
+                                className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+                            />
                         </div>
                     </div>
-                </div>
 
-                {/* Info */}
-                <div className="flex flex-col">
-                    <span className="text-sm text-gray-500 capitalize">{product.category}</span>
-                    <h1 className="text-3xl font-serif font-bold text-gray-900 mt-2 mb-4">{product.name}</h1>
-                    <p className="text-2xl text-gray-900 font-medium mb-8">
-                        {product.price.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}
-                    </p>
-
-                    <div className="prose prose-sm text-gray-600 mb-8">
-                        <p>{product.description}</p>
-                        <ul className="list-disc pl-4 mt-2 space-y-1">
-                            <li>Envío gratuito en pedidos superiores a 50€</li>
-                            <li>Devoluciones gratuitas en 30 días</li>
-                            <li>Fabricado en España</li>
-                        </ul>
-                    </div>
-
-                    <div className="space-y-6 flex-1">
-                        {/* Color Selector */}
+                    {/* Info */}
+                    <div className="flex flex-col justify-center space-y-8">
                         <div>
-                            <h3 className="text-sm font-medium text-gray-900 mb-2">Color: {selectedColor}</h3>
-                            <div className="flex space-x-3">
-                                {product.colors.map(color => (
-                                    <button
-                                        key={color}
-                                        onClick={() => setSelectedColor(color)}
-                                        className={clsx(
-                                            "h-8 w-8 rounded-full border border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary",
-                                            selectedColor === color ? "ring-2 ring-primary ring-offset-2" : ""
-                                        )}
-                                        style={{ backgroundColor: color === 'Blanco' ? '#fff' : color === 'Beige' ? '#E8DEC4' : color === 'Verde Oliva' ? '#556b2f' : 'gray' }}
-                                        title={color}
-                                    />
-                                ))}
+                            <span className="text-sm text-accent font-medium tracking-wider uppercase mb-2 block">
+                                {categories.find(c => c.id === product.category)?.[`label_${language}`]}
+                            </span>
+                            <h1 className="text-3xl md:text-4xl font-serif font-bold text-primary mb-4">
+                                {product[`name_${language}`]}
+                            </h1>
+                            <p className="text-2xl font-light text-secondary">
+                                {product.price.toFixed(2)}€
+                            </p>
+                        </div>
+
+                        <div className="prose prose-stone text-gray-500">
+                            <p>{product[`desc_${language}`]}</p>
+                        </div>
+
+                        <div className="space-y-6 pt-6 border-t border-gray-100">
+                            {/* Sizes */}
+                            <div>
+                                <span className="block text-sm font-medium text-primary mb-3">
+                                    {t('product.size')}
+                                </span>
+                                <div className="flex flex-wrap gap-3">
+                                    {product.sizes.map((s) => (
+                                        <button
+                                            key={s}
+                                            onClick={() => setSize(s)}
+                                            className={clsx(
+                                                "min-w-[3rem] h-10 px-3 rounded-md border text-sm font-medium transition-all",
+                                                size === s
+                                                    ? "border-primary bg-primary text-white"
+                                                    : "border-gray-200 text-gray-600 hover:border-gray-400"
+                                            )}
+                                        >
+                                            {s}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Colors */}
+                            <div>
+                                <span className="block text-sm font-medium text-primary mb-3">
+                                    {t('product.color')}
+                                </span>
+                                <div className="flex flex-wrap gap-3">
+                                    {product.colors.map((c) => (
+                                        <button
+                                            key={c}
+                                            onClick={() => setColor(c)}
+                                            className={clsx(
+                                                "px-4 py-2 rounded-md border text-sm font-medium transition-all",
+                                                color === c
+                                                    ? "border-primary bg-primary text-white"
+                                                    : "border-gray-200 text-gray-600 hover:border-gray-400"
+                                            )}
+                                        >
+                                            {c}
+                                        </button>
+                                    ))}
+                                </div>
                             </div>
                         </div>
 
-                        {/* Size Selector */}
-                        <div>
-                            <h3 className="text-sm font-medium text-gray-900 mb-2">Tamaño</h3>
-                            <div className="grid grid-cols-3 gap-3">
-                                {product.sizes.map(size => (
-                                    <button
-                                        key={size}
-                                        onClick={() => setSelectedSize(size)}
-                                        className={clsx(
-                                            "flex items-center justify-center rounded-md border py-3 px-3 text-sm font-medium hover:bg-gray-50 focus:outline-none sm:flex-1",
-                                            selectedSize === size ? "border-primary ring-1 ring-primary text-primary" : "border-gray-200 text-gray-900"
-                                        )}
-                                    >
-                                        {size}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-
-                        <div className="pt-8">
-                            <Button
-                                size="lg"
-                                className="w-full"
-                                onClick={() => addToCart(product, selectedSize, selectedColor)}
-                            >
-                                Añadir a la cesta - {product.price.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}
+                        <div className="pt-6">
+                            <Button size="lg" className="w-full md:w-auto" onClick={handleAddToCart}>
+                                <ShoppingBag className="w-5 h-5 mr-2" />
+                                {t('product.add')}
                             </Button>
                         </div>
+
+                        {/* Meta info */}
+                        <div className="grid grid-cols-2 gap-4 pt-8 text-sm text-gray-500">
+                            <div className="flex items-center gap-2">
+                                <Truck size={18} />
+                                <span>{t('value.shipping.desc')}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <ShieldCheck size={18} />
+                                <span>Garantía de calidad</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            {/* Related */}
-            <div className="mt-24 border-t border-gray-200 pt-16">
-                <h2 className="text-2xl font-serif font-bold mb-8">También te podría gustar</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
-                    {relatedProducts.map(p => (
-                        <ProductCard key={p.id} product={p} />
-                    ))}
-                </div>
+                {/* Related Products */}
+                {relatedProducts.length > 0 && (
+                    <div className="mt-24">
+                        <h2 className="text-2xl font-serif font-bold text-primary mb-8">{t('product.related')}</h2>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                            {relatedProducts.map(p => (
+                                <div key={p.id} className="group relative">
+                                    <Link to={`/product/${p.id}`} className="block overflow-hidden rounded-lg bg-gray-100 mb-4 aspect-[3/4]">
+                                        <img
+                                            src={p.image}
+                                            alt={p[`name_${language}`]}
+                                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                        />
+                                    </Link>
+                                    <h3 className="text-lg font-medium text-primary">
+                                        <Link to={`/product/${p.id}`}>{p[`name_${language}`]}</Link>
+                                    </h3>
+                                    <p className="text-secondary">{p.price.toFixed(2)}€</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );

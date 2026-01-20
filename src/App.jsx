@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, ScrollRestoration } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 
 // Providers
 import { AuthProvider } from './contexts/AuthContext';
@@ -9,7 +9,7 @@ import { LanguageProvider } from './contexts/LanguageContext';
 import { Header } from './components/layout/Header';
 import { Footer } from './components/layout/Footer';
 import { CartDrawer } from './components/cart/CartDrawer';
-import { ScrollToTop } from './components/ui/ScrollToTop'; // Helper I'll create inline or just use generic ScrollRestoration from v6
+import { ScrollToTop } from './components/ui/ScrollToTop';
 
 // Pages
 import { Home } from './pages/Home';
