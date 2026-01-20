@@ -18,7 +18,7 @@ export const Home = () => {
             <section className="relative h-[85vh] flex items-center justify-center text-center px-4 overflow-hidden bg-gray-900">
                 <div className="absolute inset-0 z-0">
                     <img
-                        src="https://images.unsplash.com/photo-1556905055-8f358a7a47b2?q=80&w=2070&auto=format&fit=crop"
+                        src="https://images.unsplash.com/photo-1540518614846-7eded433c457?q=80&w=2070&auto=format&fit=crop"
                         alt="Hero Bedding"
                         className="w-full h-full object-cover opacity-60"
                     />

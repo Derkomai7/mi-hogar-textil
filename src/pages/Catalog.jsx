@@ -8,12 +8,13 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { clsx } from 'clsx';
 
 export const Catalog = () => {
-    const [searchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams();
     const [filteredProducts, setFilteredProducts] = useState(products);
     const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
     const { t, language } = useLanguage();
 
     const categoryParam = searchParams.get('category');
+    const searchParam = searchParams.get('search');
 
     useEffect(() => {
         let result = products;
@@ -22,8 +23,35 @@ export const Catalog = () => {
             result = result.filter(p => p.category === categoryParam);
         }
 
+        if (searchParam) {
+            const query = searchParam.toLowerCase();
+            result = result.filter(p =>
+                p[`name_${language}`]?.toLowerCase().includes(query) ||
+                p[`desc_${language}`]?.toLowerCase().includes(query)
+            );
+        }
+
         setFilteredProducts(result);
-    }, [categoryParam]);
+    }, [categoryParam, searchParam, language]);
+
+    const handleFilterChange = (newFilters) => {
+        // Create a new URLSearchParams object from the current one to preserve other params if needed
+        const newParams = new URLSearchParams(searchParams);
+
+        // Handle category filter
+        if (newFilters.category && newFilters.category.length > 0) {
+            // Just take the last selected category for now as we are single-select in url effectively
+            newParams.set('category', newFilters.category[newFilters.category.length - 1]);
+        } else {
+            newParams.delete('category');
+        }
+
+        // We generally want to keep search if it exists, or maybe clear it?
+        // For now let's keep it independent or clear it if category is explicitly changed via filter.
+        // But typically filter change implies refinement.
+
+        setSearchParams(newParams);
+    };
 
     return (
         <div className="pt-24 pb-16 min-h-screen">
@@ -32,9 +60,11 @@ export const Catalog = () => {
                 {/* Header */}
                 <div className="flex flex-col md:flex-row justify-between items-center mb-8">
                     <h1 className="text-3xl font-serif font-bold text-primary mb-4 md:mb-0">
-                        {categoryParam
-                            ? categories.find(c => c.id === categoryParam)?.[`label_${language}`]
-                            : t('nav.catalog')}
+                        {searchParam
+                            ? `${t('search_results_for') || 'Resultados para'} "${searchParam}"`
+                            : categoryParam
+                                ? categories.find(c => c.id === categoryParam)?.[`label_${language}`]
+                                : t('nav.catalog')}
                     </h1>
 
                     <button
@@ -52,7 +82,10 @@ export const Catalog = () => {
                         "w-full md:w-64 flex-shrink-0 md:block",
                         mobileFiltersOpen ? "block" : "hidden"
                     )}>
-                        <ProductFilters activeCategory={categoryParam} />
+                        <ProductFilters
+                            activeFilters={{ category: categoryParam ? [categoryParam] : [] }}
+                            onFilterChange={handleFilterChange}
+                        />
                     </div>
 
                     {/* Product Grid */}
@@ -65,7 +98,13 @@ export const Catalog = () => {
                             </div>
                         ) : (
                             <div className="text-center py-24 text-gray-500">
-                                <p>No se encontraron productos en esta categoría.</p>
+                                <p>{language === 'es' ? 'No se encontraron productos.' : 'No products found.'}</p>
+                                <button
+                                    onClick={() => setSearchParams({})}
+                                    className="mt-4 text-accent hover:underline"
+                                >
+                                    {language === 'es' ? 'Ver todos los productos' : 'View all products'}
+                                </button>
                             </div>
                         )}
                     </div>

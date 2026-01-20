@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ShoppingBag, Menu, X, User } from 'lucide-react';
+import { ShoppingBag, Menu, X, User, Search } from 'lucide-react';
 import { useCart } from '../../contexts/CartContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { useLanguage } from '../../contexts/LanguageContext';
@@ -63,6 +63,26 @@ export const Header = () => {
 
                     {/* Actions */}
                     <div className="flex items-center space-x-6">
+
+                        {/* Search Bar - Desktop */}
+                        <div className="hidden md:block relative group">
+                            <form onSubmit={(e) => {
+                                e.preventDefault();
+                                const query = e.target.search.value;
+                                window.location.hash = `#/catalog?search=${query}`;
+                            }} className="flex items-center">
+                                <input
+                                    type="text"
+                                    name="search"
+                                    placeholder={t('nav.search') || "Buscar..."}
+                                    className="w-0 group-hover:w-32 focus:w-32 transition-all duration-300 border-b border-transparent focus:border-primary outline-none bg-transparent text-sm placeholder-gray-400"
+                                />
+                                <button type="submit" className="text-primary hover:text-accent transition-colors ml-2">
+                                    <Search size={20} />
+                                </button>
+                            </form>
+                        </div>
+
                         {/* Language Switcher */}
                         <button
                             onClick={toggleLanguage}
@@ -104,6 +124,20 @@ export const Header = () => {
                 isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
             )}>
                 <nav className="flex flex-col space-y-6">
+                    <form onSubmit={(e) => {
+                        e.preventDefault();
+                        const query = e.target.mobileSearch.value;
+                        window.location.hash = `#/catalog?search=${query}`;
+                        setIsMobileMenuOpen(false);
+                    }} className="flex items-center border-b border-gray-200 pb-2">
+                        <Search size={20} className="text-gray-400 mr-2" />
+                        <input
+                            type="text"
+                            name="mobileSearch"
+                            placeholder={t('nav.search') || "Buscar..."}
+                            className="w-full outline-none text-lg font-serif"
+                        />
+                    </form>
                     <Link to="/" className="text-xl font-serif text-primary">
                         {t('nav.home')}
                     </Link>
