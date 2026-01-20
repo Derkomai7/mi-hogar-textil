@@ -13,23 +13,27 @@ export const Home = () => {
         <div className="space-y-16 pb-16">
 
             {/* Hero Section */}
-            <section className="relative h-[80vh] bg-gray-900 flex items-center justify-center text-center px-4 overflow-hidden">
-                <img
-                    src="https://images.unsplash.com/photo-1616486338812-3dadae4b4f9d?auto=format&fit=crop&q=80&w=2000"
-                    alt="Hero Bedding"
-                    className="absolute inset-0 w-full h-full object-cover opacity-60"
-                />
-                <div className="relative z-10 max-w-4xl mx-auto space-y-6">
-                    <h1 className="text-4xl md:text-6xl font-serif font-bold text-white leading-tight">
-                        Descubre la esencia del <br /> <span className="text-accent italic">confort</span> y la <span className="text-accent italic">elegancia</span>
+            <section className="relative h-[85vh] flex items-center justify-center text-center px-4 overflow-hidden bg-gray-900">
+                <div className="absolute inset-0 z-0">
+                    <img
+                        src="https://images.unsplash.com/photo-1556905055-8f358a7a47b2?q=80&w=2070&auto=format&fit=crop"
+                        alt="Hero Bedding"
+                        className="w-full h-full object-cover opacity-60"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/30" />
+                </div>
+
+                <div className="relative z-10 max-w-4xl mx-auto space-y-8 animate-fade-in-up">
+                    <h1 className="text-5xl md:text-7xl font-serif font-bold text-white leading-tight drop-shadow-lg">
+                        Elegancia que <br /> <span className="text-accent italic">viste tu hogar</span>
                     </h1>
-                    <p className="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto">
-                        Textiles de hogar diseñados para transformar tus espacios en santuarios de paz y estilo.
+                    <p className="text-xl md:text-2xl text-gray-100 max-w-2xl mx-auto font-light leading-relaxed drop-shadow-md">
+                        Descubre nuestra nueva colección de textiles diseñados para el confort absoluto.
                     </p>
-                    <div className="pt-4">
+                    <div className="pt-8 flex justify-center gap-4">
                         <Link to="/catalog">
-                            <Button size="lg" variant="primary" className="bg-white text-gray-900 hover:bg-gray-100 border-none">
-                                Ver Colección 2024
+                            <Button size="lg" className="bg-white text-gray-900 hover:bg-gray-100 hover:scale-105 transition-all duration-300 border-none font-medium px-8 py-4 text-lg shadow-xl">
+                                Ver Nueva Colección
                             </Button>
                         </Link>
                     </div>

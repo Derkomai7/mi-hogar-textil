@@ -49,7 +49,7 @@ export const Header = () => {
 
                     {/* Logo */}
                     <Link to="/" className="text-2xl font-serif font-bold text-primary tracking-tight">
-                        Mi Hogar <span className="text-accent">Textil</span>
+                        BELENGINES
                     </Link>
 
                     {/* Desktop Nav */}

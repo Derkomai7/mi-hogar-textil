@@ -11,7 +11,7 @@ export const Footer = () => {
 
                     {/* Brand */}
                     <div className="space-y-4">
-                        <h3 className="text-2xl font-serif font-bold text-primary">Mi Hogar Textil</h3>
+                        <h3 className="text-2xl font-serif font-bold text-primary">BELENGINES</h3>
                         <p className="text-gray-500 text-sm leading-relaxed">
                             Vistiendo tu hogar con elegancia y confort desde 1990.
                             Calidad premium en cada hilo.
@@ -74,7 +74,7 @@ export const Footer = () => {
                 </div>
 
                 <div className="mt-16 pt-8 border-t border-gray-100 text-center text-sm text-gray-400">
-                    <p>&copy; {new Date().getFullYear()} Mi Hogar Textil. Todos los derechos reservados.</p>
+                    <p>&copy; {new Date().getFullYear()} BELENGINES. Todos los derechos reservados.</p>
                 </div>
             </div>
         </footer>
